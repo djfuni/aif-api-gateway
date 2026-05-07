@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#0f172a" name="theme-color"/>
+<meta content="telephone=no,email=no,address=no" name="format-detection"/>
+<title>NewAPI M3 - NewAPI M3 中转站</title>
+<meta content="NewAPI M3 提供 NewAPI 风格的 AI 聚合网关、统一模型路由、模型渠道、Token 计费、API Key 管理与 OpenAI 兼容接入。" name="description"/>
+<script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('aif_theme') || 'light';
+        const dark = saved === 'dark' || (saved === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.dataset.themeChoice = saved;
+      } catch (e) { document.documentElement.dataset.theme = 'light'; }
+    })();
+  </script>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css"></noscript>
+<link href="assets/icons-fallback.css?v=20260506-modular" rel="stylesheet">
+<link rel="preload" href="assets/css/layout.css?v=20260506-modular" as="style">
+<link href="assets/ai_site.css?v=20260506-modular" rel="stylesheet"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+</head>
+<body class="aif-ai-page" data-ai-page="studio">
+<div class="aif-shell">
+<aside aria-label="站点导航" class="aif-sidebar">
+<a class="aif-brand" href="index.html">
+<span class="aif-brand-mark"><i class="fa fa-bolt"></i></span>
+<span><strong>NewAPI M3</strong><small>NewAPI M3 Console</small></span>
+</a>
+<nav class="aif-nav">
+<div class="aif-nav-title">工作台</div>
+<button class="aif-nav-item is-active" data-view="home" type="button"><i class="fa fa-tachometer"></i><span>首页</span></button>
+<button class="aif-nav-item" data-view="console" type="button"><i class="fa fa-key"></i><span>令牌管理</span></button>
+<button class="aif-nav-item" data-view="models" type="button"><i class="fa fa-random"></i><span>渠道管理</span></button>
+<button class="aif-nav-item" data-view="chat" type="button"><i class="fa fa-flask"></i><span>模型测试</span></button>
+<div class="aif-nav-title">财务</div>
+<a class="aif-nav-item" href="redeem.html"><i class="fa fa-ticket"></i><span>兑换码</span></a>
+<a class="aif-nav-item" href="account.html"><i class="fa fa-user-circle-o"></i><span>用户中心</span></a>
+<a class="aif-nav-item" href="developer-plan.html"><i class="fa fa-rocket"></i><span>激励计划</span></a>
+</nav>
+<div class="aif-sidebar-card">
+<b>中转站就绪</b>
+<p>统一 Base URL、API Key、模型路由与用量计费，支持 MiMo 双 Key 通道。</p>
+<button class="aif-soft-btn" id="claimTrialBtn">领取额度</button>
+</div>
+</aside>
+<main class="aif-main">
+<header class="aif-topbar">
+<button aria-label="打开导航" class="aif-icon-btn aif-menu" id="mobileMenuBtn"><i class="fa fa-bars"></i><span class="aif-menu-label">菜单</span></button>
+<div class="aif-title">
+<span>控制台</span>
+<strong>NewAPI M3 运营控制台</strong>
+</div>
+<div class="aif-top-actions">
+<button aria-label="令牌" class="aif-chip" data-jump-view="console" type="button"><i class="fa fa-terminal"></i><span>令牌</span></button>
+<a aria-label="激励计划" class="aif-chip" href="developer-plan.html"><i class="fa fa-rocket"></i><span>激励</span></a>
+<button aria-label="同步模型" class="aif-chip" id="syncModelsBtn" type="button"><i class="fa fa-refresh"></i><span>同步</span></button>
+<button class="aif-avatar" id="accountBtn" title="个人主页" type="button"><i class="fa fa-user"></i></button>
+</div>
+</header>
+<section class="aif-provider-strip" hidden="" id="providerStrip">
+<button class="is-active" data-provider="all">全部</button>
+<button data-provider="moonshot">Kimi</button>
+<button data-provider="bailian">百炼免费额度</button>
+<button data-provider="github">GitHub Models</button>
+<button data-provider="siliconflow">硅基流动</button>
+<button data-provider="mimo">小米 MiMo Key 1</button>
+<button data-provider="mimo2">小米 MiMo Key 2</button>
+<button data-provider="openrouter">OpenRouter 免费</button>
+</section>
+<section class="aif-layout aif-wide-view">
+<section class="aif-home-board" data-view-panel="home">
+<!-- 【新增｜低风险】个人主页作为默认首屏，替代跳转登录页；只复用 auth.php 与 ai_api_console_api.php 现有接口，不修改鉴权/计费/转发业务。 -->
+<div class="aif-home-hero">
+<div class="aif-home-copy">
+<span class="aif-kicker"><i class="fa fa-sitemap"></i> NewAPI M3</span>
+<h1>NewAPI 式 AI 聚合网关，保留 Google M3 主题。</h1>
+<p>按 NewAPI 的方式管理用户、渠道、令牌、余额、模型倍率与调用日志；视觉只保留 Google Material You / M3 设计。</p>
+<div class="aif-home-actions">
+<button class="aif-primary-btn" data-jump-view="chat" type="button"><i class="fa fa-commenting-o"></i> 打开 测试平台</button>
+<button data-jump-view="console" type="button"><i class="fa fa-terminal"></i> 打开令牌</button>
+<a href="redeem.html"><i class="fa fa-ticket"></i> 兑换</a>
+<a href="developer-plan.html"><i class="fa fa-rocket"></i> 激励计划</a>
+</div>
+</div>
+<div class="aif-home-card aif-home-profile" id="homeProfileCard">
+<div class="aif-profile-head">
+<span class="aif-profile-avatar"><i class="fa fa-user"></i></span>
+<div>
+<strong id="homeUserName">访客</strong>
+<p id="homeUserMeta">登录后展示余额、Token、渠道与调用记录。</p>
+</div>
+</div>
+<div class="aif-home-metrics">
+<div><span>Token 余额</span><strong id="homeBalance">--</strong></div>
+<div><span>API Key</span><strong id="homeKeyCount">--</strong></div>
+<div><span>近期调用</span><strong id="homeUsageCount">--</strong></div>
+</div>
+<div class="aif-home-inline-actions">
+<button id="homeCreateKeyBtn" type="button"><i class="fa fa-key"></i> 创建密钥</button>
+<button id="homeClaimTrialBtn" type="button"><i class="fa fa-gift"></i> 领取试用</button>
+</div>
+</div>
+</div>
+<section aria-label="NewAPI 风格运营面板" class="aif-newapi-board">
+<article class="aif-newapi-stat"><span>模型渠道</span><strong id="newapiProviderCount">7</strong><small>Kimi / 百炼 / GitHub / 硅基 / OpenRouter / MiMo x2</small></article>
+<article class="aif-newapi-stat"><span>令牌体系</span><strong>Bearer</strong><small>用户只填写本站 API Key</small></article>
+<article class="aif-newapi-stat"><span>MiMo 双密钥</span><strong>Key 1 + Key 2</strong><small>mimo:: 与 mimo2:: 独立路由</small></article>
+<article class="aif-newapi-stat"><span>主题</span><strong>Google M3</strong><small>Material You 全站锁定</small></article>
+<article class="aif-newapi-table">
+<div class="aif-card-title-lite"><div><span>渠道状态</span><strong>NewAPI 式渠道管理</strong></div><button data-jump-view="models" type="button">查看模型</button></div>
+<div class="aif-channel-table">
+<div><b>渠道</b><b>模型前缀</b><b>扣费</b><b>状态</b></div>
+<div><span>小米 MiMo 一号</span><code>mimo::</code><span>按倍率</span><em>运行中</em></div>
+<div><span>小米 MiMo 二号</span><code>mimo2::</code><span>按倍率</span><em>运行中</em></div>
+<div><span>OpenRouter Free</span><code>openrouter::</code><span>0 Token</span><em>运行中</em></div>
+<div><span>国内聚合渠道</span><code>kimi / dashscope / sf</code><span>套餐 Token</span><em>运行中</em></div>
+</div>
+</article>
+</section>
+<div class="aif-home-grid">
+<article class="aif-home-card aif-auth-card" id="homeAuthCard">
+<div class="aif-card-title-lite">
+<div><span>账号入口</span><strong>登录 / 注册</strong></div>
+<div class="aif-auth-tabs" role="tablist">
+<button class="is-active" data-home-auth-tab="login" type="button">登录</button>
+<button data-home-auth-tab="register" type="button">注册</button>
+</div>
+</div>
+<form autocomplete="on" class="aif-auth-form is-active" id="homeLoginForm">
+<label><span>用户名</span><input autocomplete="username" maxlength="20" minlength="3" name="username" placeholder="输入本站用户名" required=""/></label>
+<label><span>密码</span><input autocomplete="current-password" name="password" placeholder="请输入密码" required="" type="password"/></label>
+<label><span>图片验证码</span><div class="aif-captcha-row"><input autocomplete="off" inputmode="latin" name="image_captcha" placeholder="验证码" required=""/><img alt="登录验证码" id="homeLoginCaptcha"/><button aria-label="刷新登录验证码" data-home-refresh-captcha="login" type="button"><i class="fa fa-refresh"></i></button></div></label>
+<button class="aif-primary-btn" type="submit"><i class="fa fa-sign-in"></i> 登录并回到主页</button>
+</form>
+<form autocomplete="on" class="aif-auth-form" id="homeRegisterForm">
+<label><span>用户名</span><input autocomplete="username" name="username" placeholder="建议使用英文或数字" required=""/></label>
+<label><span>邮箱</span><input autocomplete="email" name="email" placeholder="用于接收验证码" required="" type="email"/></label>
+<label><span>图片验证码</span><div class="aif-captcha-row"><input autocomplete="off" name="image_captcha" placeholder="验证码" required=""/><img alt="注册验证码" id="homeRegisterCaptcha"/><button aria-label="刷新注册验证码" data-home-refresh-captcha="register" type="button"><i class="fa fa-refresh"></i></button></div></label>
+<label><span>邮箱验证码</span><div class="aif-code-row"><input autocomplete="one-time-code" inputmode="numeric" name="email_code" placeholder="6 位验证码" required=""/><button id="homeSendEmailCodeBtn" type="button"><i class="fa fa-envelope-o"></i> 获取验证码</button></div></label>
+<label><span>密码</span><input autocomplete="new-password" name="password" placeholder="至少 6 位" required="" type="password"/></label>
+<button class="aif-primary-btn" type="submit"><i class="fa fa-user-plus"></i> 创建账号</button>
+</form>
+<div aria-live="polite" class="aif-auth-status" id="homeAuthStatus"></div>
+</article>
+<article class="aif-home-card aif-home-account" hidden="" id="homeLoggedCard">
+<div class="aif-card-title-lite"><div><span>个人中心</span><strong>账户与订阅</strong></div><button id="homeLogoutBtn" type="button"><i class="fa fa-sign-out"></i> 退出</button></div>
+<div class="aif-account-snapshot">
+<div><span>当前订阅</span><strong id="homeSubscription">暂无订阅</strong></div>
+<div><span>Base URL</span><strong id="homeBaseUrl">--</strong></div>
+</div>
+<div class="aif-home-list" id="homeRecentKeys"></div>
+</article>
+<article class="aif-home-card aif-home-feature-card">
+<div class="aif-card-title-lite"><div><span>能力概览</span><strong>AI 聚合网关核心能力</strong></div></div>
+<div class="aif-feature-list">
+<div><i class="fa fa-random"></i><strong>统一路由</strong><p>一个 Base URL + 一个本站 Key，按 model 字段路由到不同渠道。</p></div>
+<div><i class="fa fa-shield"></i><strong>渠道隔离</strong><p>上游凭据只在服务端保存，MiMo Key 1/Key 2 可同时存在。</p></div>
+<div><i class="fa fa-credit-card"></i><strong>Token 计费</strong><p>余额、套餐、倍率、调用流水统一在控制台查看。</p></div>
+<div><i class="fa fa-code"></i><strong>兼容接入</strong><p>cURL、Python、JavaScript 示例随当前模型自动更新。</p></div>
+</div>
+</article>
+<article class="aif-home-card aif-home-plans">
+<div class="aif-card-title-lite"><div><span>计费套餐</span><strong>订阅 / 充值 / 试用</strong></div><button data-jump-view="console" type="button">查看全部</button></div>
+<div class="aif-home-plan-preview" id="homePlanPreview"></div>
+</article>
+</div>
+</section>
+<aside class="aif-control-panel">
+<label class="aif-field">
+<span>中转模型</span>
+<select id="modelSelect"></select>
+</label>
+<div class="aif-model-search">
+<i class="fa fa-search"></i>
+<input id="modelSearchInput" placeholder="搜索模型 / 渠道 / 标签"/>
+</div>
+<div class="aif-range-row">
+<label>最大输出 <output id="maxTokensOutput">4096</output></label>
+<input id="maxTokensInput" max="32768" min="512" step="512" type="range" value="4096"/>
+</div>
+<div class="aif-range-row">
+<label>Temperature <output id="temperatureOutput">0.7</output></label>
+<input id="temperatureInput" max="2" min="0" step="0.1" type="range" value="0.7"/>
+</div>
+<div class="aif-range-row">
+<label>Top-P <output id="topPOutput">0.9</output></label>
+<input id="topPInput" max="1" min="0.1" step="0.05" type="range" value="0.9"/>
+</div>
+<label class="aif-field">
+<span>推理模式</span>
+<select id="reasoningSelect">
+<option value="auto">自动</option>
+<option value="fast">快速</option>
+<option value="deep">深度</option>
+</select>
+</label>
+<div class="aif-meter-card">
+<span>Token 余额</span>
+<strong id="tokenBalance">未登录</strong>
+<small id="accountHint">本站注册/登录后可领取额度</small>
+</div>
+<div class="aif-mini-actions">
+<button id="createKeyBtn"><i class="fa fa-key"></i> 创建令牌 Key</button>
+<button id="openConsoleBtn"><i class="fa fa-code"></i> 令牌</button>
+<a href="redeem.html"><i class="fa fa-ticket"></i> 兑换</a>
+</div>
+</aside>
+<section class="aif-chat-card" data-view-panel="chat" hidden="">
+<div class="aif-billing-banner">
+<i class="fa fa-shield"></i>
+<span>中转站统一计量 Token；上游 Key 仅保存在服务端，支持同模型不同 Key 通道。</span>
+</div>
+<div class="aif-messages" id="chatMessages">
+<div class="aif-welcome">
+<div class="aif-welcome-orb"><i class="fa fa-magic"></i></div>
+<h1>AI 聚合网关已就绪</h1>
+<p>这里可接入 Kimi、百炼、GitHub Models、硅基流动、OpenRouter 与小米 MiMo。使用同一套本站 API Key，通过 model 字段切换渠道。</p>
+<div class="aif-prompt-grid">
+<button data-prompt="帮我写一个适合短视频标题的音乐推荐文案">音乐推荐文案</button>
+<button data-prompt="请用表格比较 Kimi、百炼、GitHub Models、硅基流动适合的使用场景">渠道选型对比</button>
+<button data-prompt="帮我把下面的代码做安全审查，并给出修复建议：">代码安全审查</button>
+<button data-prompt="帮我设计一个 AI 聚合网关首页运营文案">首页文案</button>
+</div>
+</div>
+</div>
+<form class="aif-composer" id="chatForm">
+<textarea id="promptInput" placeholder="请输入提示词..." rows="4"></textarea>
+<div class="aif-composer-actions">
+<button class="aif-ghost" id="clearChatBtn" type="button">清空</button>
+<button id="sendBtn" type="submit"><i class="fa fa-paper-plane"></i></button>
+</div>
+</form>
+</section>
+<section class="aif-model-board" data-view-panel="models" hidden="">
+<div class="aif-section-head">
+<span>模型渠道</span>
+<strong>模型渠道清单 + 上游同步</strong>
+</div>
+<div class="aif-model-grid" id="modelCards"></div>
+</section>
+<section class="aif-console-redesign aif-console-integrated" data-view-panel="console" hidden="">
+<!-- 【修改｜低风险】控制台改为主页内嵌视图，避免跳转 console.html；后端 API、鉴权、计费逻辑均不变。 -->
+<div class="aif-console">
+<header class="aif-dev-topbar">
+<div class="aif-dev-brand">
+<button aria-label="返回模型工作台" class="aif-dev-logo" data-jump-view="chat" type="button"><i class="fa fa-cubes"></i></button>
+<div>
+<div class="aif-dev-breadcrumb"><button data-jump-view="chat" type="button">模型工作台</button><i class="fa fa-angle-right"></i><span>令牌</span></div>
+<strong>AI 聚合网关接入控制台</strong>
+</div>
+</div>
+<div class="aif-dev-status"><i class="fa fa-check-circle"></i><span>服务运行正常，所有系统状态良好</span><button aria-label="关闭提示" type="button">×</button></div>
+<nav aria-label="控制台操作" class="aif-dev-actions">
+<a href="#consoleExamples"><i class="fa fa-file-text-o"></i><span>文档</span></a>
+<button data-jump-view="home" type="button"><i class="fa fa-user-circle-o"></i><span>个人主页</span></button>
+<button id="consoleRefreshBtn" type="button"><i class="fa fa-refresh"></i><span>刷新</span></button>
+</nav>
+</header>
+<div class="aif-console-error" hidden="" id="consoleError"></div>
+<section aria-label="模型服务控制台" class="aif-dev-layout">
+<aside aria-label="模型渠道列表" class="aif-model-sidebar">
+<div class="aif-sidebar-head">
+<div>
+<span>模型渠道列表</span>
+<strong id="consoleModelCount">--</strong>
+</div>
+<button id="consoleSidebarRefresh" title="刷新模型列表" type="button"><i class="fa fa-refresh"></i></button>
+</div>
+<label class="aif-search-box">
+<i class="fa fa-search"></i>
+<input id="consoleModelSearch" placeholder="搜索模型名称或 ID" type="search"/>
+</label>
+<div class="aif-filter-row">
+<select aria-label="模型类型筛选" id="consoleTypeFilter">
+<option value="all">全部类型</option>
+<option value="chat">对话模型</option>
+<option value="reasoning">推理模型</option>
+<option value="vision">支持图像输入</option>
+<option value="zero_token">免额度服务</option>
+<option value="openrouter_free">OpenRouter 免费</option>
+<option value="mimo">MiMo Key 1</option>
+<option value="mimo2">MiMo Key 2</option>
+</select>
+<select aria-label="模型能力筛选" id="consoleFeatureFilter">
+<option value="all">全部能力</option>
+<option value="stream">支持流式</option>
+<option value="thinking">支持思考</option>
+</select>
+</div>
+<div aria-live="polite" class="aif-model-list" id="consoleModelList"></div>
+</aside>
+<section class="aif-dev-main">
+<section aria-label="当前模型概览" class="aif-service-summary">
+<div class="aif-service-identity">
+<div class="aif-service-icon"><span id="consoleModelIconLetter">M</span></div>
+<div>
+<div class="aif-service-title-row">
+<h1 id="consoleSelectedModelTitle">模型渠道</h1>
+<div class="aif-tags" id="consoleModelTags"></div>
+</div>
+<p id="consoleSelectedModelSub">选择左侧模型后，这里会展示调用该模型必须填写的参数。</p>
+</div>
+</div>
+<div class="aif-summary-meta" id="consoleSummaryMeta"></div>
+<div class="aif-summary-actions">
+<button class="aif-primary-btn" id="consoleTryBtn" type="button"><i class="fa fa-play"></i> 在线调试</button>
+<button data-copy-current="endpoint" type="button"><i class="fa fa-copy"></i> 复制 Endpoint</button>
+<button data-copy-current="model" type="button"><i class="fa fa-id-badge"></i> 复制 model</button>
+</div>
+</section>
+<section class="aif-callout-guide">
+<i class="fa fa-lightbulb-o"></i>
+<div>
+<strong>接入这个模型渠道需要填写什么？</strong>
+<p>客户端只需要填写本站 <code>Authorization: Bearer API Key</code> 和当前 <code>model</code>；网关会在服务端选择对应渠道与上游密钥。</p>
+</div>
+</section><nav aria-label="控制台功能分区" class="aif-console-section-nav"><button class="is-active" data-console-section-button="docs" type="button"><i class="fa fa-plug"></i><span>接入文档</span></button><button data-console-section-button="playground" type="button"><i class="fa fa-flask"></i><span>在线调试</span></button><button data-console-section-button="usage" type="button"><i class="fa fa-line-chart"></i><span>用量 / 操作</span></button><button data-console-section-button="billing" type="button"><i class="fa fa-credit-card"></i><span>套餐 / Key</span></button></nav>
+<section class="aif-console-section is-active" data-console-section="docs"><section class="aif-console-workspace aif-console-docs-grid"><article class="aif-pro-card aif-guide-card">
+<div class="aif-card-title"><span><i class="fa fa-plug"></i> 接入指南（兼容 NewAPI 用法）</span><small>复制到 OpenAI 兼容客户端或代码里</small></div>
+<div class="aif-guide-rows" id="consoleGuideRows"></div>
+<div class="aif-inline-tip"><i class="fa fa-shield"></i> 完整 API Key 只会在创建时显示一次，请复制保存；后续列表仅展示前缀。</div>
+</article><article class="aif-pro-card aif-param-card">
+<div class="aif-card-title"><span><i class="fa fa-list-alt"></i> 请求参数说明</span><a href="#consoleExamples">查看示例 →</a></div>
+<div class="aif-param-tabs"><button class="is-active" type="button">必填参数 2</button><button type="button">常用可选 4</button></div>
+<div class="aif-table-wrap">
+<table class="aif-param-table">
+<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>示例值</th><th>说明</th></tr></thead>
+<tbody id="consoleParamTable"></tbody>
+</table>
+</div>
+</article><article class="aif-pro-card aif-example-card" id="consoleExamples">
+<div class="aif-card-title"><span><i class="fa fa-code"></i> 快速调用示例</span><button data-copy-current="code" type="button"><i class="fa fa-copy"></i> 复制代码</button></div>
+<div class="aif-code-tabs" id="consoleExampleTabs" role="tablist">
+<button class="is-active" data-code-tab="curl" type="button">cURL</button>
+<button data-code-tab="python" type="button">Python</button>
+<button data-code-tab="javascript" type="button">JavaScript</button>
+</div>
+<pre class="aif-docs-code" id="consoleDocs">加载中...</pre>
+</article></section></section><section class="aif-console-section" data-console-section="playground" hidden=""><article class="aif-pro-card aif-playground-card" id="consolePlayground">
+<div class="aif-card-title"><span><i class="fa fa-flask"></i> 在线调试 / API 测试平台</span><small>用你自己的 API Key 直接测试当前选中的模型</small></div>
+<div class="aif-playground-grid">
+<label class="aif-playground-field aif-playground-field-wide"><span>完整 API Key</span><input autocomplete="off" id="consolePlaygroundKey" placeholder="粘贴完整 API Key，仅保存在当前浏览器本地" type="password"/></label>
+<label class="aif-playground-field"><span>max_completion_tokens</span><input id="consolePlaygroundMaxTokens" max="32768" min="1" step="1" type="number" value="512"/></label>
+<label class="aif-playground-field"><span>temperature</span><input id="consolePlaygroundTemperature" max="2" min="0" step="0.1" type="number" value="0.7"/></label>
+</div>
+<label class="aif-playground-field aif-playground-field-full"><span>Prompt</span><textarea id="consolePlaygroundPrompt" placeholder="例如：请用 3 条要点介绍这个模型适合的使用场景" rows="5"></textarea></label>
+<div class="aif-console-buttons aif-playground-actions">
+<button class="aif-primary-btn" id="consoleRunBtn" type="button"><i class="fa fa-play-circle"></i> 发送测试请求</button>
+<button id="consoleCopyCurlBtn" type="button"><i class="fa fa-copy"></i> 复制当前 cURL</button>
+<button id="consoleClearPlaygroundBtn" type="button"><i class="fa fa-eraser"></i> 清空输出</button>
+</div>
+<div class="aif-playground-meta" id="consolePlaygroundMeta"><span>当前模型：加载中...</span><span>提示：请粘贴完整 API Key 后再调试</span></div>
+<pre class="aif-docs-code aif-playground-output" id="consolePlaygroundOutput">等待调试请求...</pre>
+</article></section><section class="aif-console-section" data-console-section="usage" hidden=""><section class="aif-console-usage-grid"><section aria-label="账号与密钥状态" class="aif-account-row">
+<article class="aif-mini-stat"><span>账号状态</span><strong id="consoleAccount">检测中...</strong><p id="consoleAccountHint">如果未登录，请先在本站注册或登录。</p></article>
+<article class="aif-mini-stat"><span>Token 余额</span><strong id="consoleBalance">--</strong><p>非免费服务会按倍率扣除站内额度。</p></article>
+<article class="aif-mini-stat"><span>Base URL</span><strong id="consoleBaseUrl">--</strong><p>兼容客户端填写这里。</p></article>
+</section><section class="aif-pro-card aif-console-actions-card">
+<div class="aif-card-title"><span><i class="fa fa-bolt"></i> 快速操作</span><small>创建令牌、兑换 Token、查看计费与账号</small></div>
+<div class="aif-console-buttons">
+<button id="consoleClaimBtn" type="button"><i class="fa fa-gift"></i> 领取额度</button>
+<button id="consoleCreateKeyBtn" type="button"><i class="fa fa-key"></i> 创建令牌 Key</button>
+<a href="redeem.html"><i class="fa fa-ticket"></i> 兑换</a>
+<button data-jump-view="home" type="button"><i class="fa fa-user"></i> 个人主页</button>
+</div>
+<div aria-label="兑换码中心入口" class="aif-redeem-entry">
+<div class="aif-redeem-entry-copy">
+<span>兑换码中心</span>
+<strong>前往独立页面兑换 Token</strong>
+<p>支持输入兑换码、实时到账、查看最近兑换记录。页面已单独优化，移动端也更易用。</p>
+</div>
+<a class="aif-primary-btn" href="redeem.html"><i class="fa fa-ticket"></i> 兑换 Token</a>
+</div>
+<pre class="aif-key-box" hidden="" id="consoleSecretBox"></pre>
+</section><article class="aif-pro-card aif-usage-card">
+<div class="aif-card-title"><span><i class="fa fa-line-chart"></i> 实时用量</span><small>近 7 天</small></div>
+<div class="aif-usage-stats" id="consoleUsageStats"></div>
+<div aria-label="近 7 天调用趋势" class="aif-usage-chart" id="consoleUsageChart"></div>
+<p class="aif-usage-note"><i class="fa fa-info-circle"></i> 调用成功后会在这里记录模型、消耗额度和扣费额度。</p>
+</article></section></section><section class="aif-console-section" data-console-section="billing" hidden=""><section class="aif-bottom-grid">
+<article class="aif-pro-card">
+<div class="aif-card-title"><span><i class="fa fa-credit-card"></i> 计费套餐</span><small>订阅、充值与试用额度</small></div>
+<div class="aif-plan-tabs">
+<button class="is-active" data-console-plan-kind="subscription" type="button">月度订阅</button>
+<button data-console-plan-kind="topup" type="button">额度加量包</button>
+<button data-console-plan-kind="trial" type="button">免费试用</button>
+</div>
+<div class="aif-plan-grid" id="consolePlans"></div>
+<p class="aif-plan-note">月卡购买后立即发放当月额度；当前版本记录订阅有效期，不会自动续费扣款。</p>
+</article>
+<article class="aif-pro-card">
+<div class="aif-card-title"><span><i class="fa fa-key"></i> 我的令牌 Key</span><small>仅显示前缀</small></div>
+<div class="aif-list" id="consoleKeys"></div>
+<div class="aif-card-title aif-sub-title"><span><i class="fa fa-calendar-check-o"></i> 我的订阅</span><small>有效期记录</small></div>
+<div class="aif-list" id="consoleSubscriptions"></div>
+<div class="aif-card-title aif-sub-title"><span><i class="fa fa-ticket"></i> 兑换记录</span><small>最近 10 条</small></div>
+<div class="aif-list" id="consoleRedeemRecords"></div>
+</article>
+</section></section>
+
+
+
+</section>
+</section>
+</div>
+</section>
+</section>
+</main>
+</div>
+<nav class="aif-mobile-bottom-nav" aria-label="移动端底部导航">
+  <button class="is-active" data-jump-view="home" type="button"><i class="fa fa-home"></i><span>首页</span></button>
+  <button data-jump-view="console" type="button"><i class="fa fa-key"></i><span>令牌</span></button>
+  <button data-jump-view="models" type="button"><i class="fa fa-random"></i><span>模型</span></button>
+  <button data-jump-view="chat" type="button"><i class="fa fa-flask"></i><span>测试</span></button>
+</nav>
+<div class="aif-backdrop" id="mobileBackdrop"></div>
+<script src="assets/aif_shared.js?v=20260506-modular" defer></script>
+<script defer="" src="assets/ai_site.js?v=20260506-modular"></script>
+<script defer="" src="assets/ai_console.js?v=20260506-modular"></script>
+<script defer="" src="assets/ai_theme.js?v=20260506-modular"></script>
+  <script src="assets/aif_pwa.js?v=20260506-modular" defer></script>
+</body>
+</html>

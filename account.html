@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>账户中心 - NewAPI M3</title>
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('aif_theme') || 'light';
+        const dark = saved === 'dark' || (saved === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.dataset.themeChoice = saved;
+      } catch (e) { document.documentElement.dataset.theme = 'light'; }
+    })();
+  </script>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css"></noscript>
+<link href="assets/icons-fallback.css?v=20260506-modular" rel="stylesheet">
+  <link rel="stylesheet" href="assets/ai_site.css?v=20260506-modular">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link href="assets/css/account.css?v=20260506-modular" rel="stylesheet">
+</head>
+<body class="aif-ai-page" data-ai-page="account">
+  <main class="aif-account-page-shell">
+    <section class="aif-account-card" aria-label="本站账号中心">
+      <aside class="aif-account-hero">
+        <div>
+          <a class="aif-account-brand" href="index.html"><span><i class="fa fa-bolt"></i></span><strong>NewAPI M3 账户</strong></a>
+          <h1>账户、Token 与令牌独立管理</h1>
+          <p>登录后可领取试用 Token、创建兼容令牌、查看套餐与调用记录，并进入中转站令牌选择模型渠道。</p>
+        </div>
+        <div class="aif-account-kpis" aria-label="账号能力">
+          <div><strong>独立</strong><small>Session / Cookie / 数据表隔离</small></div>
+          <div><strong>安全</strong><small>图片验证码 + 邮箱验证码</small></div>
+          <div><strong>兼容</strong><small>OpenAI 兼容格式</small></div>
+          <div><strong>可控</strong><small>令牌与计费独立管理</small></div>
+        </div>
+        <div class="aif-account-actions">
+          <a href="index.html"><i class="fa fa-home"></i> 返回中转站</a>
+          <a href="console.html"><i class="fa fa-terminal"></i> 令牌</a>
+          <a href="admin/index.php"><i class="fa fa-lock"></i> 后台管理</a>
+        </div>
+      </aside>
+
+      <section class="aif-account-panel">
+        <div id="currentUser" class="aif-current-user" hidden>
+          <div><strong id="currentUserName">已登录</strong><small id="currentUserMeta">本站账号</small></div>
+          <button class="aif-logout-btn" id="logoutBtn" type="button"><i class="fa fa-sign-out"></i> 退出</button>
+        </div>
+
+        <div class="aif-account-tabs" role="tablist" aria-label="登录或注册">
+          <button type="button" class="is-active" data-auth-tab="login">登录账号</button>
+          <button type="button" data-auth-tab="register">注册账号</button>
+        </div>
+
+        <form id="loginForm" class="aif-account-form is-active" autocomplete="on">
+          <label class="aif-auth-field"><span>用户名</span><input name="username" required minlength="3" maxlength="20" placeholder="输入本站用户名"></label>
+          <label class="aif-auth-field"><span>密码</span><input name="password" required minlength="6" type="password" placeholder="输入密码"></label>
+          <div class="aif-captcha-row">
+            <label class="aif-auth-field"><span>图片验证码</span><input name="image_captcha" required maxlength="8" autocomplete="off" placeholder="输入验证码"></label>
+            <div class="aif-captcha-box"><img id="loginCaptcha" alt="登录验证码"><button class="aif-icon-lite" type="button" data-refresh-captcha="login" title="刷新验证码"><i class="fa fa-refresh"></i></button></div>
+          </div>
+          <button class="aif-auth-submit" type="submit"><i class="fa fa-sign-in"></i> 登录本站账号</button>
+        </form>
+
+        <form id="registerForm" class="aif-account-form" autocomplete="on">
+          <div class="aif-form-grid">
+            <label class="aif-auth-field"><span>用户名</span><input name="username" required minlength="3" maxlength="20" placeholder="3-20 位中英文/数字"></label>
+            <label class="aif-auth-field"><span>邮箱</span><input name="email" required type="email" maxlength="120" placeholder="用于接收验证码"></label>
+          </div>
+          <label class="aif-auth-field"><span>密码</span><input name="password" required minlength="6" type="password" placeholder="至少 6 位"></label>
+          <div class="aif-code-row">
+            <label class="aif-auth-field"><span>邮箱验证码</span><input name="email_code" required maxlength="8" autocomplete="off" placeholder="6 位邮箱验证码"></label>
+            <button type="button" id="sendEmailCodeBtn"><i class="fa fa-envelope-o"></i> 获取邮箱验证码</button>
+          </div>
+          <div class="aif-captcha-row">
+            <label class="aif-auth-field"><span>图片验证码</span><input name="image_captcha" required maxlength="8" autocomplete="off" placeholder="发送邮箱验证码/注册时均需填写"></label>
+            <div class="aif-captcha-box"><img id="registerCaptcha" alt="注册验证码"><button class="aif-icon-lite" type="button" data-refresh-captcha="register" title="刷新验证码"><i class="fa fa-refresh"></i></button></div>
+          </div>
+          <button class="aif-auth-submit" type="submit"><i class="fa fa-user-plus"></i> 注册本站账号</button>
+          <p class="aif-auth-note">获取邮箱验证码会消耗当前图片验证码；发送成功后页面会自动刷新图片验证码，请用新的图片验证码完成注册。</p>
+        </form>
+        <div id="authStatus" class="aif-auth-status" role="status" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+<script src="assets/aif_shared.js?v=20260506-modular" defer></script>
+  <script src="assets/ai_auth.js?v=20260506-modular" defer></script>
+  <script src="assets/ai_theme.js?v=20260506-modular" defer></script>
+  <script src="assets/aif_pwa.js?v=20260506-modular" defer></script>
+</body>
+</html>

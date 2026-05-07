@@ -1,0 +1,4 @@
+<?php
+http_response_code(410);
+header('Content-Type: text/html; charset=utf-8');
+?><!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>跨站跳转已移除</title><link rel="stylesheet" href="assets/ai_site.css"></head><body class="aif-ai-page"><main style="max-width:680px;margin:10vh auto;padding:32px;border-radius:28px;background:rgba(255,255,255,.08);color:#fff"><h1>AI/API 站已独立运行</h1><p>本站不再跳转或共享音乐站账号，请使用本站自己的注册、登录、Token 与后台。</p><a href="index.html" style="color:#93c5fd;font-weight:800">返回 AI/API 首页</a></main></body></html>

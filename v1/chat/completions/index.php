@@ -1,0 +1,4 @@
+<?php
+require_once dirname(__DIR__, 3) . '/ai_api_gateway_lib.php';
+ai_api_handle_chat_completion();
+?>

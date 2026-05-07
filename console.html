@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#0f172a" name="theme-color"/>
+<title>控制台 - 模型服务</title>
+<script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('aif_theme') || 'light';
+        const dark = saved === 'dark' || (saved === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.dataset.themeChoice = saved;
+      } catch (e) { document.documentElement.dataset.theme = 'light'; }
+    })();
+  </script>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css"></noscript>
+<link href="assets/icons-fallback.css?v=20260506-modular" rel="stylesheet">
+<link rel="preload" href="assets/css/layout.css?v=20260506-modular" as="style">
+<link href="assets/ai_site.css?v=20260506-modular" rel="stylesheet"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+</head>
+<body class="aif-ai-page aif-console-page aif-console-redesign" data-ai-page="console">
+<main class="aif-console">
+<header class="aif-dev-topbar">
+<div class="aif-dev-brand">
+<a aria-label="返回模型工作台" class="aif-dev-logo" href="index.html"><i class="fa fa-cubes"></i></a>
+<div>
+<div class="aif-dev-breadcrumb"><a href="index.html">控制台</a><i class="fa fa-angle-right"></i><span>模型服务</span></div>
+<strong>AI 聚合网关接入控制台</strong>
+</div>
+</div>
+<div class="aif-dev-status"><i class="fa fa-check-circle"></i><span>服务运行正常，所有系统状态良好</span><button aria-label="关闭提示" type="button">×</button></div>
+<nav aria-label="控制台操作" class="aif-dev-actions">
+<a href="#consoleExamples"><i class="fa fa-file-text-o"></i><span>文档</span></a>
+<a href="account.html"><i class="fa fa-user-circle-o"></i><span>账户</span></a>
+<button id="consoleRefreshBtn" type="button"><i class="fa fa-refresh"></i><span>刷新</span></button>
+</nav>
+</header>
+<div class="aif-console-error" hidden="" id="consoleError"></div>
+<section aria-label="模型服务控制台" class="aif-dev-layout">
+<aside aria-label="模型渠道列表" class="aif-model-sidebar">
+<div class="aif-sidebar-head">
+<div>
+<span>模型渠道列表</span>
+<strong id="consoleModelCount">--</strong>
+</div>
+<button id="consoleSidebarRefresh" title="刷新模型列表" type="button"><i class="fa fa-refresh"></i></button>
+</div>
+<label class="aif-search-box">
+<i class="fa fa-search"></i>
+<input id="consoleModelSearch" placeholder="搜索模型名称或 ID" type="search"/>
+</label>
+<div class="aif-filter-row">
+<select aria-label="模型类型筛选" id="consoleTypeFilter">
+<option value="all">全部类型</option>
+<option value="chat">对话模型</option>
+<option value="reasoning">推理模型</option>
+<option value="vision">支持图像输入</option>
+<option value="zero_token">免额度服务</option>
+<option value="openrouter_free">OpenRouter 免费</option>
+<option value="mimo">MiMo Key 1</option>
+<option value="mimo2">MiMo Key 2</option>
+</select>
+<select aria-label="模型能力筛选" id="consoleFeatureFilter">
+<option value="all">全部能力</option>
+<option value="stream">支持流式</option>
+<option value="thinking">支持思考</option>
+</select>
+</div>
+<div aria-live="polite" class="aif-model-list" id="consoleModelList"></div>
+</aside>
+<section class="aif-dev-main">
+<section aria-label="当前模型概览" class="aif-service-summary">
+<div class="aif-service-identity">
+<div class="aif-service-icon"><span id="consoleModelIconLetter">M</span></div>
+<div>
+<div class="aif-service-title-row">
+<h1 id="consoleSelectedModelTitle">模型渠道</h1>
+<div class="aif-tags" id="consoleModelTags"></div>
+</div>
+<p id="consoleSelectedModelSub">选择左侧模型后，这里会展示调用该模型必须填写的参数。</p>
+</div>
+</div>
+<div class="aif-summary-meta" id="consoleSummaryMeta"></div>
+<div class="aif-summary-actions">
+<button class="aif-primary-btn" id="consoleTryBtn" type="button"><i class="fa fa-play"></i> 在线调试</button>
+<button data-copy-current="endpoint" type="button"><i class="fa fa-copy"></i> 复制 Endpoint</button>
+<button data-copy-current="model" type="button"><i class="fa fa-id-badge"></i> 复制 model</button>
+</div>
+</section>
+<section class="aif-callout-guide">
+<i class="fa fa-lightbulb-o"></i>
+<div>
+<strong>接入这个模型渠道需要填写什么？</strong>
+<p>客户端只需要填写本站 <code>Authorization: Bearer API Key</code> 和当前 <code>model</code>；网关会在服务端选择对应渠道与上游密钥。</p>
+</div>
+</section><nav aria-label="控制台功能分区" class="aif-console-section-nav"><button class="is-active" data-console-section-button="docs" type="button"><i class="fa fa-plug"></i><span>接入文档</span></button><button data-console-section-button="playground" type="button"><i class="fa fa-flask"></i><span>在线调试</span></button><button data-console-section-button="usage" type="button"><i class="fa fa-line-chart"></i><span>用量 / 操作</span></button><button data-console-section-button="billing" type="button"><i class="fa fa-credit-card"></i><span>套餐 / Key</span></button></nav>
+<section class="aif-console-section is-active" data-console-section="docs"><section class="aif-console-workspace aif-console-docs-grid"><article class="aif-pro-card aif-guide-card">
+<div class="aif-card-title"><span><i class="fa fa-plug"></i> 接入指南（兼容 NewAPI 用法）</span><small>复制到 OpenAI 兼容客户端或代码里</small></div>
+<div class="aif-guide-rows" id="consoleGuideRows"></div>
+<div class="aif-inline-tip"><i class="fa fa-shield"></i> 完整 API Key 只会在创建时显示一次，请复制保存；后续列表仅展示前缀。</div>
+</article><article class="aif-pro-card aif-param-card">
+<div class="aif-card-title"><span><i class="fa fa-list-alt"></i> 请求参数说明</span><a href="#consoleExamples">查看示例 →</a></div>
+<div class="aif-param-tabs"><button class="is-active" type="button">必填参数 2</button><button type="button">常用可选 4</button></div>
+<div class="aif-table-wrap">
+<table class="aif-param-table">
+<thead><tr><th>参数名</th><th>类型</th><th>必填</th><th>示例值</th><th>说明</th></tr></thead>
+<tbody id="consoleParamTable"></tbody>
+</table>
+</div>
+</article><article class="aif-pro-card aif-example-card" id="consoleExamples">
+<div class="aif-card-title"><span><i class="fa fa-code"></i> 快速调用示例</span><button data-copy-current="code" type="button"><i class="fa fa-copy"></i> 复制代码</button></div>
+<div class="aif-code-tabs" id="consoleExampleTabs" role="tablist">
+<button class="is-active" data-code-tab="curl" type="button">cURL</button>
+<button data-code-tab="python" type="button">Python</button>
+<button data-code-tab="javascript" type="button">JavaScript</button>
+</div>
+<pre class="aif-docs-code" id="consoleDocs">加载中...</pre>
+</article></section></section><section class="aif-console-section" data-console-section="playground" hidden=""><article class="aif-pro-card aif-playground-card" id="consolePlayground">
+<div class="aif-card-title"><span><i class="fa fa-flask"></i> 在线调试 / API 测试平台</span><small>用你自己的 API Key 直接测试当前选中的模型</small></div>
+<div class="aif-playground-grid">
+<label class="aif-playground-field aif-playground-field-wide"><span>完整 API Key</span><input autocomplete="off" id="consolePlaygroundKey" placeholder="粘贴完整 API Key，仅保存在当前浏览器本地" type="password"/></label>
+<label class="aif-playground-field"><span>max_completion_tokens</span><input id="consolePlaygroundMaxTokens" max="32768" min="1" step="1" type="number" value="512"/></label>
+<label class="aif-playground-field"><span>temperature</span><input id="consolePlaygroundTemperature" max="2" min="0" step="0.1" type="number" value="0.7"/></label>
+</div>
+<label class="aif-playground-field aif-playground-field-full"><span>Prompt</span><textarea id="consolePlaygroundPrompt" placeholder="例如：请用 3 条要点介绍这个模型适合的使用场景" rows="5"></textarea></label>
+<div class="aif-console-buttons aif-playground-actions">
+<button class="aif-primary-btn" id="consoleRunBtn" type="button"><i class="fa fa-play-circle"></i> 发送测试请求</button>
+<button id="consoleCopyCurlBtn" type="button"><i class="fa fa-copy"></i> 复制当前 cURL</button>
+<button id="consoleClearPlaygroundBtn" type="button"><i class="fa fa-eraser"></i> 清空输出</button>
+</div>
+<div class="aif-playground-meta" id="consolePlaygroundMeta"><span>当前模型：加载中...</span><span>提示：请粘贴完整 API Key 后再调试</span></div>
+<pre class="aif-docs-code aif-playground-output" id="consolePlaygroundOutput">等待调试请求...</pre>
+</article></section><section class="aif-console-section" data-console-section="usage" hidden=""><section class="aif-console-usage-grid"><section aria-label="账号与密钥状态" class="aif-account-row">
+<article class="aif-mini-stat"><span>账号状态</span><strong id="consoleAccount">检测中...</strong><p id="consoleAccountHint">如果未登录，请先在本站注册或登录。</p></article>
+<article class="aif-mini-stat"><span>Token 余额</span><strong id="consoleBalance">--</strong><p>非免费服务会按倍率扣除站内额度。</p></article>
+<article class="aif-mini-stat"><span>Base URL</span><strong id="consoleBaseUrl">--</strong><p>兼容客户端填写这里。</p></article>
+</section><section class="aif-pro-card aif-console-actions-card">
+<div class="aif-card-title"><span><i class="fa fa-bolt"></i> 快速操作</span><small>领取额度、创建密钥、兑换码与管理账号</small></div>
+<div class="aif-console-buttons">
+<button id="consoleClaimBtn" type="button"><i class="fa fa-gift"></i> 领取试用额度</button>
+<button id="consoleCreateKeyBtn" type="button"><i class="fa fa-key"></i> 创建令牌 Key</button>
+<a href="redeem.html"><i class="fa fa-ticket"></i> 兑换</a>
+<a href="account.html"><i class="fa fa-user"></i> 账户中心</a>
+</div>
+<div aria-label="兑换码中心入口" class="aif-redeem-entry">
+<div class="aif-redeem-entry-copy">
+<span>兑换码中心</span>
+<strong>前往独立页面兑换 Token</strong>
+<p>支持输入兑换码、实时到账、查看最近兑换记录。页面已单独优化，移动端也更易用。</p>
+</div>
+<a class="aif-primary-btn" href="redeem.html"><i class="fa fa-ticket"></i> 立即兑换</a>
+</div>
+<pre class="aif-key-box" hidden="" id="consoleSecretBox"></pre>
+</section><article class="aif-pro-card aif-usage-card">
+<div class="aif-card-title"><span><i class="fa fa-line-chart"></i> 调用用量</span><small>近 7 天</small></div>
+<div class="aif-usage-stats" id="consoleUsageStats"></div>
+<div aria-label="近 7 天调用趋势" class="aif-usage-chart" id="consoleUsageChart"></div>
+<p class="aif-usage-note"><i class="fa fa-info-circle"></i> 调用成功后会在这里记录模型、消耗额度和扣费额度。</p>
+</article></section></section><section class="aif-console-section" data-console-section="billing" hidden=""><section class="aif-bottom-grid">
+<article class="aif-pro-card">
+<div class="aif-card-title"><span><i class="fa fa-credit-card"></i> 订阅套餐</span><small>订阅与额度加量包</small></div>
+<div class="aif-plan-tabs">
+<button class="is-active" data-console-plan-kind="subscription" type="button">月度订阅</button>
+<button data-console-plan-kind="topup" type="button">额度加量包</button>
+<button data-console-plan-kind="trial" type="button">免费试用</button>
+</div>
+<div class="aif-plan-grid" id="consolePlans"></div>
+<p class="aif-plan-note">月卡购买后立即发放当月额度；当前版本记录订阅有效期，不会自动续费扣款。</p>
+</article>
+<article class="aif-pro-card">
+<div class="aif-card-title"><span><i class="fa fa-key"></i> 我的令牌 Key</span><small>仅显示前缀</small></div>
+<div class="aif-list" id="consoleKeys"></div>
+<div class="aif-card-title aif-sub-title"><span><i class="fa fa-calendar-check-o"></i> 我的订阅</span><small>有效期记录</small></div>
+<div class="aif-list" id="consoleSubscriptions"></div>
+<div class="aif-card-title aif-sub-title"><span><i class="fa fa-ticket"></i> 兑换记录</span><small>最近 10 条</small></div>
+<div class="aif-list" id="consoleRedeemRecords"></div>
+</article>
+</section></section>
+
+
+
+</section>
+</section>
+</main>
+<script src="assets/aif_shared.js?v=20260506-modular" defer></script>
+<script src="assets/ai_console.js?v=20260506-modular"></script>
+<script defer="" src="assets/ai_theme.js?v=20260506-modular"></script>
+  <script src="assets/aif_pwa.js?v=20260506-modular" defer></script>
+</body>
+</html>

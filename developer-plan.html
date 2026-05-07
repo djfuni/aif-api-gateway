@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="format-detection" content="telephone=no,email=no,address=no">
+  <title>NewAPI M3 激励计划计划</title>
+  <meta name="description" content="NewAPI M3 百万亿 Token 创造者激励计划，面向高质量 AI 项目用户发放 Token 套餐。">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css" as="style" crossorigin onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.min.css"></noscript>
+<link href="assets/icons-fallback.css?v=20260506-modular" rel="stylesheet">
+  <link href="assets/developer_plan.css?v=20260506-modular" rel="stylesheet">
+</head>
+<body>
+  <canvas id="matrixCanvas" aria-hidden="true"></canvas>
+  <div id="spotlight" aria-hidden="true"></div>
+
+  <div class="page-shell">
+    <header class="top-nav">
+      <div class="nav-left">
+        <a class="brand" href="index.html" aria-label="返回 NewAPI M3 首页">
+          <span class="brand-mark">A</span>
+          <span>NewAPI M3</span>
+        </a>
+        <span class="status-tag"><span class="green-dot"></span><span>发放进行中</span></span>
+      </div>
+      <div class="nav-right">
+        <div class="countdown-box"><span>倒计时</span><strong id="countdownTimer">--天 --:--:--</strong></div>
+        <button type="button" class="nav-btn" id="langBtn">EN</button>
+        <button type="button" class="nav-btn" id="shareBtn">分享</button>
+        <a class="nav-link" href="index.html">令牌</a>
+        <a class="nav-apply" href="#apply">申请</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-screen" aria-labelledby="heroTitle">
+        <div class="hero-content">
+          <div class="orbit-kicker">NewAPI M3 Orbit</div>
+          <h1 class="hero-title" id="heroTitle">百万亿 Token 创造者激励计划</h1>
+
+          <div class="token-area" aria-live="polite">
+            <div class="token-label">剩余 TOKENS</div>
+            <span class="token-number" id="heroTokenNumber">--</span>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="line-bg"><div class="line-fill" id="remainingBar"></div></div>
+            <div class="total-info">#100,000,000,000,000</div>
+          </div>
+
+          <a href="#apply" class="apply-now"><span>立即申请</span><span class="arrow">→</span></a>
+
+          <div class="hero-stats" aria-label="激励计划数据">
+            <div class="hero-stat"><strong id="statGranted">--</strong><span>已发放</span></div>
+            <div class="hero-stat"><strong id="statPending">--</strong><span>待审核</span></div>
+            <div class="hero-stat"><strong>人工评估</strong><span>审核方式</span></div>
+          </div>
+
+          <div class="scroll-cue" aria-hidden="true">⌄</div>
+        </div>
+      </section>
+
+      <div class="content-wrapper">
+        <section class="section steps-section" id="process">
+          <div class="section-header">
+            <span class="section-tag">Process</span>
+            <h2>申请流程</h2>
+            <p>登录本站账号后提交项目材料。管理员会根据真实性、AI 使用深度和落地价值进行评估，并把 Token 套餐发放到账户钱包。</p>
+          </div>
+          <div class="steps-grid">
+            <article class="step-card"><div class="step-num">01</div><h3>提交申请</h3><p>填写邮箱、项目介绍、使用场景、证明材料和期望套餐。</p></article>
+            <article class="step-card"><div class="step-num">02</div><h3>等待评估</h3><p>管理员根据项目真实性、AI 使用深度和落地价值进行审核。</p></article>
+            <article class="step-card"><div class="step-num">03</div><h3>发放权益</h3><p>审核通过后，管理员选择套餐，Token 自动进入账户钱包。</p></article>
+          </div>
+        </section>
+
+        <section id="apply" class="section apply-section">
+          <div class="apply-layout">
+            <article class="form-card">
+              <div class="card-header">
+                <span class="card-tag">Application</span>
+                <h2>提交激励计划申请</h2>
+                <p class="login-hint" id="devLoginHint">正在检测登录状态...</p>
+              </div>
+              <form id="devApplicationForm" class="dev-form">
+                <div class="form-grid">
+                  <label><span>联系邮箱</span><input type="email" name="contact_email" id="devContactEmail" required placeholder="用于接收审核通知"></label>
+                  <label><span>申请身份</span><select name="applicant_type"><option>个人开发者</option><option>团队 / 工作室</option><option>企业项目</option><option>开源项目维护者</option><option>内容创作者</option></select></label>
+                  <label><span>项目名称</span><input name="project_name" required maxlength="80" placeholder="例如：AI 编程助手插件"></label>
+                  <label><span>项目阶段</span><select name="project_stage"><option>构思 / 原型</option><option selected>开发中</option><option>已上线</option><option>已有稳定用户</option></select></label>
+                  <label><span>项目链接</span><input name="project_url" placeholder="官网 / GitHub / Demo，可选"></label>
+                  <label><span>证明材料</span><input name="proof_url" placeholder="截图、文档、仓库、视频等，可选"></label>
+                  <label class="field-wide"><span>正在使用的 AI 工具 / 模型</span><textarea name="ai_tools" rows="3" placeholder="例如：Cursor、Claude Code、OpenAI SDK、工作流平台、已有模型调用方式等"></textarea></label>
+                  <label class="field-wide"><span>项目介绍</span><textarea name="project_desc" rows="5" required minlength="20" placeholder="请说明项目做什么、服务谁、当前进度、为什么需要 API Token。"></textarea></label>
+                  <label class="field-wide"><span>Token 使用计划</span><textarea name="usage_plan" rows="5" required minlength="10" placeholder="请说明预计调用模型、调用频率、主要任务、如何验证效果。"></textarea></label>
+                  <label><span>期望套餐</span><select name="expected_package_id" id="devPackageSelect"><option value="">加载套餐中...</option></select></label>
+                </div>
+                <label class="form-check"><input type="checkbox" required> 我确认提交信息真实，权益仅用于上述项目测试和开发。</label>
+                <button class="submit-btn" type="submit"><i class="fa fa-paper-plane"></i> 提交申请</button>
+                <div id="devApplyStatus" class="apply-status" aria-live="polite"></div>
+              </form>
+            </article>
+
+            <aside class="side-card">
+              <div class="card-header">
+                <span class="card-tag">Records</span>
+                <h2>我的申请记录</h2>
+              </div>
+              <div id="devMyApplications" class="record-list">
+                <p class="record-empty">登录后可查看你的申请状态。</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="rules" class="section faq-section">
+          <div class="section-header">
+            <span class="section-tag">FAQ</span>
+            <h2>常见问题</h2>
+          </div>
+          <details open><summary>01 什么是 NewAPI M3 激励计划计划？</summary><p>这是面向高质量 AI 项目用户的 Token 定向发放活动。我们希望把免费或优惠的调用额度交给真正需要进行模型接入、插件开发、工作流搭建和产品验证的用户。</p></details>
+          <details><summary>02 如何加入？</summary><p>登录本站账号后，在本页填写申请表并提交。管理员会在后台看到申请，审核通过时会选择一个 Token 套餐并发放到你的账户钱包。</p></details>
+          <details><summary>03 会获得什么权益？</summary><p>权益由管理员根据项目材料选择，可能是月度订阅套餐，也可能是一次性加量包。最终到账以后台审核结果为准。</p></details>
+          <details><summary>04 什么样的申请更容易通过？</summary><p>项目描述越具体、使用场景越清晰、证明材料越充分，通过率和发放档位越高。建议写清楚项目用途、当前进度、预计调用模型和消耗量。</p></details>
+          <details><summary>05 没通过还能重新申请吗？</summary><p>可以。申请被拒绝后，你可以补充材料、完善项目说明后重新提交；同一账号同时只能有一份待审核申请。</p></details>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">&copy; NewAPI M3 &middot; 激励计划计划</footer>
+<script src="assets/aif_shared.js?v=20260506-modular" defer></script>
+  <script src="assets/developer_plan.js?v=20260506-modular" defer></script>
+  <script src="assets/aif_pwa.js?v=20260506-modular" defer></script>
+</body>
+</html>

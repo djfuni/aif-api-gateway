@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>隐私协议</title>
+<style>
+  :root{--bg:#0b0f19;--card:#121827;--text:#e2e8f0;--muted:#94a3b8;--accent:#38bdf8;--accent2:#818cf8;--success:#34d399;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.8;min-height:100vh;padding:24px}
+  .wrap{max-width:800px;margin:0 auto}
+  .header{text-align:center;padding:40px 0 24px}
+  .header h1{font-size:2rem;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .header p{color:var(--muted);margin-top:8px}
+  .card{background:var(--card);border:1px solid #1e293b;border-radius:16px;padding:28px;margin-bottom:20px}
+  .card h2{font-size:1.2rem;margin:24px 0 12px;color:var(--accent)}
+  .card h2:first-child{margin-top:0}
+  .card p,.card li{color:var(--muted);margin-bottom:10px}
+  .card ul{padding-left:24px;margin:12px 0}
+  .card li{margin-bottom:8px}
+  .highlight{background:rgba(52,211,153,.1);border-left:3px solid var(--success);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;color:var(--text)}
+  .footer{text-align:center;padding:40px 0;color:var(--muted);font-size:.85rem}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,#334155,transparent);margin:24px 0}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #1e293b}
+  th{color:var(--accent);font-weight:600}
+  td{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>🔒 隐私协议</h1>
+    <p>最后更新日期：2026年5月7日</p>
+  </div>
+
+  <div class="card">
+    <h2>一、引言</h2>
+    <p>我们非常重视您的隐私保护。本隐私协议旨在向您说明我们如何收集、使用、存储和保护您的个人信息。请您在使用本服务前仔细阅读本协议。</p>
+    <p>我们承诺严格遵守《中华人民共和国个人信息保护法》等相关法律法规，采取合理有效的安全措施保护您的个人信息。</p>
+
+    <h2>二、我们收集的信息</h2>
+    <p>为了向您提供服务，我们可能会收集以下类型的信息：</p>
+
+    <table>
+      <tr><th>信息类型</th><th>具体内容</th><th>用途</th></tr>
+      <tr><td>账号信息</td><td>用户名、邮箱、密码（加密存储）</td><td>身份识别与登录验证</td></tr>
+      <tr><td>联系信息</td><td>QQ号、邮箱地址</td><td>客服沟通、重要通知</td></tr>
+      <tr><td>使用数据</td><td>API 调用记录、Token 消耗量</td><td>计费、用量统计、服务优化</td></tr>
+      <tr><td>设备信息</td><td>IP 地址、浏览器类型、操作系统</td><td>安全防护、反欺诈</td></tr>
+      <tr><td>支付信息</td><td>订单记录、交易流水</td><td>财务对账、售后服务</td></tr>
+    </table>
+
+    <div class="highlight">
+      <strong>✅ 我们明确不收集的内容：</strong>
+      <ul style="margin-top:8px">
+        <li>您的 API 调用内容（Prompt 和 Response）<strong>不会被持久化存储</strong></li>
+        <li>我们不会记录您的聊天记录用于训练</li>
+        <li>不会向第三方出售您的个人信息</li>
+      </ul>
+    </div>
+
+    <h2>三、信息使用方式</h2>
+    <p>我们收集的信息仅用于以下目的：</p>
+    <ul>
+      <li>提供、维护和改进本服务</li>
+      <li>处理您的订单和支付</li>
+      <li>发送服务通知（如余额不足、套餐到期提醒）</li>
+      <li>防止欺诈和滥用行为</li>
+      <li>遵守法律法规要求</li>
+      <li>进行匿名化的统计分析（不识别个人身份）</li>
+    </ul>
+
+    <h2>四、信息存储与安全</h2>
+    <ul>
+      <li>您的密码采用 <strong>bcrypt/SHA256</strong> 等加密算法存储，即使数据库泄露也无法直接获取明文</li>
+      <li>API Key 采用哈希存储，泄露后无法逆向还原</li>
+      <li>传输过程使用 <strong>HTTPS/TLS</strong> 加密</li>
+      <li>服务器部署在安全的数据中心，定期备份</li>
+      <li>仅授权人员可访问用户数据，且需通过多重身份验证</li>
+    </ul>
+
+    <h2>五、信息共享与披露</h2>
+    <p>我们不会将您的个人信息出售给任何第三方。仅在以下情况下可能共享信息：</p>
+    <ul>
+      <li><strong>法律要求：</strong>应司法机关、行政机关依法要求提供</li>
+      <li><strong>服务提供：</strong>向为我们提供支付、服务器托管等服务的第三方服务商（受保密协议约束）</li>
+      <li><strong>安全需要：</strong>为防止欺诈、网络攻击等安全事件</li>
+      <li><strong>合并收购：</strong>如发生业务合并、收购，信息将随业务转移（会提前通知）</li>
+    </ul>
+
+    <h2>六、Cookie 与本地存储</h2>
+    <p>我们使用 Cookie 和浏览器本地存储技术来：</p>
+    <ul>
+      <li>保持您的登录状态</li>
+      <li>记住您的偏好设置（如主题、语言）</li>
+      <li>分析网站流量和使用情况</li>
+    </ul>
+    <p>您可以在浏览器设置中禁用 Cookie，但可能影响部分功能正常使用。</p>
+
+    <h2>七、您的权利</h2>
+    <p>根据相关法律法规，您享有以下权利：</p>
+    <ul>
+      <li><strong>知情权：</strong>了解我们如何处理您的个人信息</li>
+      <li><strong>访问权：</strong>查看我们持有的您的个人信息</li>
+      <li><strong>更正权：</strong>要求更正不准确的个人信息</li>
+      <li><strong>删除权：</strong>要求删除您的个人信息（法律法规保留期限除外）</li>
+      <li><strong>撤回同意：</strong>随时撤回对个人信息处理的同意</li>
+      <li><strong>注销账号：</strong>申请注销账号，我们将删除您的个人信息</li>
+    </ul>
+
+    <h2>八、未成年人保护</h2>
+    <p>本服务不面向未满 18 周岁的未成年人。如果我们发现收集了未成年人的个人信息，将立即删除。</p>
+
+    <h2>九、第三方链接</h2>
+    <p>我们的网站可能包含指向第三方网站的链接。请注意，这些网站有自己的隐私政策，我们不对其内容和隐私保护措施负责。</p>
+
+    <h2>十、协议更新</h2>
+    <p>我们可能会不时更新本隐私协议。更新后的协议将在网站上公布，重大变更会通过邮件或公告通知您。</p>
+
+    <h2>十一、联系我们</h2>
+    <p>如您对本隐私协议有任何疑问，或希望行使您的权利，请通过以下方式联系我们：</p>
+    <ul>
+      <li>官方 QQ 群：<strong>1102188728</strong></li>
+      <li>网站内反馈功能</li>
+    </ul>
+
+    <div class="highlight">
+      <strong>💡 隐私保护承诺：</strong>我们将持续改进隐私保护措施，确保您的个人信息安全。您的信任是我们最大的动力。
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="footer">
+    <p>本协议最终解释权归本站所有 | 官方群：1102188728</p>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+# ============================================
+# Runtime Data (JSON-based database)
+# These are generated at runtime - DO NOT COMMIT
+# ============================================
+data/*.json
+data/*.key
+data/*_private.php
+data/*.db
+
+# Keep data directory structure
+!data/*.gitkeep
+
+# ============================================
+# Local Configuration Overrides
+# ============================================
+config/admin_auth.local.php
+
+# ============================================
+# Environment & Secrets
+# ============================================
+.env
+.env.local
+.env.*.local
+*.key
+
+# ============================================
+# Logs
+# ============================================
+*.log
+aifchat/server/*.log
+
+# ============================================
+# OS Files
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ============================================
+# Editor / IDE
+# ============================================
+.vscode/settings.json
+.vscode/workspace.json
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+
+# ============================================
+# Backup / Temp
+# ============================================
+*.bak
+*.backup
+*.orig
+*.tmp
+*.temp
+
+# ============================================
+# PHP Runtime
+# ============================================
+# Composer vendor dir (if used)
+vendor/
+composer.lock
+
+# ============================================
+# WorkBuddy / Project-specific
+# ============================================
+.workbuddy/
+
+# ============================================
+# Cache
+# ============================================
+*/cache/*
+**/cache/ratelimit/*.json
+
+# ============================================
+# Node / npm (if used)
+# ============================================
+node_modules/

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网站公告</title>
+<style>
+  :root{--bg:#0b0f19;--card:#121827;--text:#e2e8f0;--muted:#94a3b8;--accent:#38bdf8;--accent2:#818cf8;--success:#34d399;--warn:#fbbf24;--danger:#f87171;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.7;min-height:100vh;padding:24px}
+  .wrap{max-width:800px;margin:0 auto}
+  .header{text-align:center;padding:40px 0 24px}
+  .header h1{font-size:2rem;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .header p{color:var(--muted);margin-top:8px}
+  .card{background:var(--card);border:1px solid #1e293b;border-radius:16px;padding:24px;margin-bottom:20px;transition:transform .2s}
+  .card:hover{transform:translateY(-2px);border-color:#334155}
+  .badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:600;margin-bottom:12px}
+  .badge.new{background:rgba(52,211,153,.15);color:var(--success)}
+  .badge.hot{background:rgba(251,191,36,.15);color:var(--warn)}
+  .badge.info{background:rgba(56,189,248,.15);color:var(--accent)}
+  .card h2{font-size:1.25rem;margin-bottom:12px;color:var(--text)}
+  .card p,.card li{color:var(--muted)}
+  .card ul{padding-left:20px;margin-top:8px}
+  .card li{margin-bottom:6px}
+  .qq-group{background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(129,140,248,.1));border:1px solid rgba(56,189,248,.3);border-radius:12px;padding:20px;text-align:center;margin:24px 0}
+  .qq-group h3{font-size:1.1rem;margin-bottom:8px;color:var(--accent)}
+  .qq-number{font-size:1.5rem;font-weight:700;color:var(--accent2);letter-spacing:2px;font-family:monospace}
+  .qq-group p{margin-top:8px;font-size:.9rem;color:var(--muted)}
+  .btn{display:inline-block;padding:10px 24px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-decoration:none;font-weight:600;margin-top:12px;transition:opacity .2s}
+  .btn:hover{opacity:.9}
+  .footer{text-align:center;padding:40px 0;color:var(--muted);font-size:.85rem}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,#334155,transparent);margin:24px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>📢 网站公告</h1>
+    <p>最新动态、功能更新与重要通知</p>
+  </div>
+
+  <div class="qq-group">
+    <h3>💬 官方交流群</h3>
+    <div class="qq-number">1102188728</div>
+    <p>遇到问题？想提建议？欢迎加入官方群交流讨论</p>
+    <a href="https://qm.qq.com/cgi-bin/qm/qr?k=1102188728" class="btn" target="_blank">一键加群</a>
+  </div>
+
+  <div class="card">
+    <span class="badge new">最新</span>
+    <h2>🎉 NewAPI 网关正式上线</h2>
+    <p>我们已完成全新 API 网关的部署！现在你可以：</p>
+    <ul>
+      <li>一个 API Key 调用 <strong>100+ 款 AI 模型</strong></li>
+      <li>支持 Kimi、DeepSeek、GPT-4o、Claude、Gemini 等主流模型</li>
+      <li>实时查看 Token 用量和余额</li>
+      <li>在线购买套餐或兑换充值码</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <span class="badge hot">热门</span>
+    <h2>🆓 免费模型专区</h2>
+    <p>以下模型<strong>完全免费</strong>，注册即可使用：</p>
+    <ul>
+      <li><strong>智谱 GLM-4-Flash</strong> — 永久免费，不限量</li>
+      <li><strong>Google Gemini 2.5 Flash</strong> — 每天 1440 次免费</li>
+      <li><strong>GitHub Models</strong> — GPT-4.1 / GPT-4o 每天 150 次</li>
+      <li><strong>硅基流动</strong> — DeepSeek / Qwen 系列 1000 RPM</li>
+      <li><strong>火山引擎豆包</strong> — 每天 200 万 Token 免费</li>
+      <li><strong>NVIDIA 免费模型</strong> — GPT-OSS / Seed-OSS 系列</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <span class="badge info">活动</span>
+    <h2>🎁 新用户福利</h2>
+    <p>注册即送 <strong>20,000 Token 试用包</strong>，可用于测试所有已上架模型。</p>
+    <ul>
+      <li>每个账号限领一次</li>
+      <li>支持所有模型调用</li>
+      <li>有效期 30 天</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <span class="badge info">套餐</span>
+    <h2>💳 推荐套餐</h2>
+    <ul>
+      <li><strong>轻量月卡 ¥19</strong> — 2M Token / 30 天，适合个人使用</li>
+      <li><strong>进阶月卡 ¥49</strong> — 8M Token / 30 天，最受欢迎</li>
+      <li><strong>专业月卡 ¥99</strong> — 25M Token / 30 天，开发者首选</li>
+      <li><strong>团队月卡 ¥299</strong> — 80M Token / 30 天，多人共享</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <span class="badge info">开发者</span>
+    <h2>👨‍💻 开发者激励计划</h2>
+    <p>有项目想接入 AI？提交开发者申请，审核通过即可获赠 Token 套餐！</p>
+    <ul>
+      <li>个人开发者 / 工作室 / 企业均可申请</li>
+      <li>需提交项目介绍和使用计划</li>
+      <li>审核通过后发放对应额度</li>
+    </ul>
+    <a href="developer-plan.html" class="btn">立即申请</a>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ 使用须知</h2>
+    <ul>
+      <li>请遵守《用户协议》和《隐私协议》</li>
+      <li>禁止用于违法违规内容生成</li>
+      <li>API Key 请妥善保管，泄露请及时重置</li>
+      <li>免费额度可能随平台政策调整，恕不另行通知</li>
+      <li>如有疑问请加官方群 <strong>1102188728</strong> 咨询</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer">
+    <p>本网站由 AI API Gateway 提供技术支持</p>
+    <p style="margin-top:4px">官方群：1102188728 | 最后更新：2026-05-07</p>
+  </div>
+</div>
+</body>
+</html>

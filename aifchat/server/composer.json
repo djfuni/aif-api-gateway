@@ -1,0 +1,16 @@
+{
+  "name": "aifchat/server",
+  "description": "AIF Chat - 移动端聊天应用后端服务",
+  "type": "project",
+  "require": {
+    "php": ">=8.1",
+    "firebase/php-jwt": "^6.10",
+    "vlucas/phpdotenv": "^5.6",
+    "phpmailer/phpmailer": "^6.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "AIFChat\\": "includes/"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "default_model": "lite",
+  "note": "Copy this file to data/app_settings.json if you want to override the mobile app default model. You can also set environment variable AIF_APP_DEFAULT_MODEL."
+}
